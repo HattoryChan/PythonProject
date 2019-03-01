@@ -53,6 +53,79 @@ a0 = [
 #print(MinOfTwo(21, l5, l6))
 #print(MinOfThree(12, l0, l1, l2))
 #print(CreateListOfThreeArray(a0))
-print (MinAndMax(a0))
+#print (MinAndMax(a0))
+
+
+# Time converter
+#Output in 'hh:mm a.m' format
+#if < 10 - without 0 before it
+#input format "hh:mm"
+def TimeConverter(time):
+    newtime = str(int(time[:2])- 12) + time[2:] +' p.m.' if int(time[:2]) > 12 else time +' p.m.' if int(time[:2]) == 12 else '12' + time[2:] +' a.m.' if int(time[:2]) == 0 else time[1:2]+ time[2:] +' a.m.'
+    return newtime
+
+
+
+#Most Frequency symbol
+#In: List, Out: List
+
+#sorted key(on count)
+def sort_Count(item):
+    return item[0]
+
+#create list of value    
+def Iterable(data):
+    tempList = list()
+    howMuch = list()
+    i = 0
+    while i < len(data):  #add to dict and show how much        
+        tempList.append(data.count(data[i]))
+        tempList.append(data[i])     
+        howMuch.append(tempList[:])
+        tempList.clear()
+        
+        i +=1
+    
+    howMuch =(sorted(howMuch,key = sort_Count, reverse = True))[:]
+    finalList = list()
+    
+    for b in howMuch: 
+        i = 0
+        while  i < b[0]:   #add element to new list in an her amount
+            finalList.append(b[1])
+            i+=1
+        
+        
+        if howMuch.count(b) > 1:  #delete nedless value from list
+            j = b[0]            
+            while j > 1:
+                howMuch.remove(b)
+                j-=1    
+    return(howMuch,'\n', finalList)       
+
+
+#Multiplication table
+def MultTable():
+    for i in range(1,10):
+        for j in range(1,10):
+            print(i*j, end='\t')
+        print ("\n")
+    
+            
+        
+            
+            
+            
+def main():
+    #print(MultTable())    
+    #print(TimeConverter('12:30'))
+    print(Iterable(['alex','alex', 'bob', 'bob', 'carl', 'carl', 'bob']))
+
+
+
+main()    
+    
+
+
 
 

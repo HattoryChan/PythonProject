@@ -5,7 +5,8 @@ import imutils
 MOT_THRESHOLD =40 #Пороговое значение поиска обьектов 
 
 
-vid = cv.VideoCapture("videoplayback (4).mp4")
+#vid = cv.VideoCapture("videoplayback (4).mp4")
+vid = cv.VideoCapture("MotionVideo.mp4")
 
 
 cont_Start = []     #Инициализируем пустые листы
