@@ -112,15 +112,89 @@ def MultTable():
         print ("\n")
     
             
+#Long repeat(search longest substring of the same letter
+def LongRepeat(strData):
+    i = j = 0
+    tempStr = ''
+    tempCount = [0]
+    while i < len(strData):
+        if not strData[i] == tempStr:
+            tempStr = strData[i]
+            tempCount.append(1)
+            j+=1
+        else:
+            tempCount[j] +=1
+
+        i+=1
+    
+    return(max(tempCount), tempCount)       
+
+#Flatten list            
+#Input data: A nested list with integers.
+#Output data: The one-dimensional list with integers.            
+def FlattenList(dataL):
+    flatStr = str(str(dataL).split(']'))
+    flatStr = str(flatStr.split('\'')) #create splitted str
+    i = 0
+    finalL = list()
+    print(flatStr)
+    while i < len(flatStr): #run on all symb       
         
+        if flatStr[i].isdigit():    #we need digit
+            tempS = ''
+            while flatStr[i].isdigit(): #go foreward and search end sumbol
+                tempS += flatStr[i]
+                i+=1
+            finalL.append(int(tempS))
             
+        elif flatStr[i] == '-': #and negative number            
+            if flatStr[i+1].isdigit():
+                tempS = flatStr[i]
+                i+=1    #we have already took the number
+            while flatStr[i].isdigit(): #go foreward and search end sumbol
+                tempS += flatStr[i]
+                i+=1
+            finalL.append(int(tempS))
             
+        i+=1
+    
+    return(finalL)
+
+#All the Same
+def AllTheSame(data):
+    try:
+        return(True if len(data) == 0 or min(data) == max(data) else False)
+    except:
+        return False
+    #return True if len(set(data))<=1 else False
+
+#Sun angle
+def SunAngle(time):
+    nightMess = 'I don\'t see the sun!'
+
+    try:
+        if int(time[:2]) >= 18 and int(time[3:]) >= 1: #we don't see sun after 18:00
+            return nightMess
+        elif int(time[3:]) > 59:    #and minute can't be more 59
+            return nightMess
+        elif int(time[:2]) < 6: #don't see sun before 6:00
+            return nightMess
+        else:               #calculate angle
+            timeM = ((int(time[:2])-6)*60 + int(time[3:]))/4 
+            return '{:.0f}'.format(timeM)
+    except:
+        return nightTime
+            
+    
             
 def main():
     #print(MultTable())    
     #print(TimeConverter('12:30'))
-    print(Iterable(['alex','alex', 'bob', 'bob', 'carl', 'carl', 'bob']))
-
+    #print(Iterable(['alex','alex', 'bob', 'bob', 'carl', 'carl', 'bob']))
+    #print(LongRepeat('ddvvrwwwrggg'))
+    #print(FlattenList([100,99,98,97,-96,95,94,93,92,91,90,89,88,87,86,]))
+    #print(AllTheSame([]))
+    print(SunAngle('18:01'))
 
 
 main()    
