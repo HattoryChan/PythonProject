@@ -185,8 +185,36 @@ def SunAngle(time):
     except:
         return nightTime
             
-    
+
+
+#Bird language
+def BirdTranslater(data):
+    vowels = "aeiouy"
+    try:
+        data = data.lower()
+        i = 0
+        while i < len(data)-1: #can't be ending symbol
+            if data[i] == ' ':
+                i+=1
+                
+          
+            elif data[i].isalpha() and not data[i] in vowels:
+              
+                data = data[:i+1]+data[i+2:]
+                i+=1
+                print(data[i], i, '\n')
+            else:
+                 data = data[:i]+data[i+2:]
+                 i+=1
             
+            print(data)
+            
+        return(data)
+    except:
+        return(data)
+     
+
+       
 def main():
     #print(MultTable())    
     #print(TimeConverter('12:30'))
@@ -194,7 +222,9 @@ def main():
     #print(LongRepeat('ddvvrwwwrggg'))
     #print(FlattenList([100,99,98,97,-96,95,94,93,92,91,90,89,88,87,86,]))
     #print(AllTheSame([]))
-    print(SunAngle('18:01'))
+    #print(SunAngle('18:01'))
+    print(BirdTranslater('hoooowe yyyooouuu duoooiiine'))
+    print(BirdTranslater('aaa bo cy da eee fe'))
 
 
 main()    
