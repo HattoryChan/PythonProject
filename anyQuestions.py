@@ -213,8 +213,68 @@ def BirdTranslater(data):
     except:
         return(data)
      
+#Cheak how much pawn saved
+def ChessSafePawn(data):
+    
+    #Speedy solution: get previous letter and next letter in previous number row
+    return  sum([1 for i in data if (chr(ord(i[0])-1)+str(int(i[1])-1)) in data
+                                or (chr(ord(i[0])+1)+str(int(i[1])-1)) in data])
+    '''
 
+    global  coord_Mat
+    if len(data) < 2:
+        return 0
+    coord_Mat = [[0 for i in range(8)] for i in range(8)]
+        
+    #write fogure position to the matrix
+    for item in data:
+        coord_Mat[int(ord(item[0].upper())-65)][int(item[1])-1] = 1 
+    
+    safe_count = i = j = 0
+    while i < 8:
+        j=0
+        while j < 8:   #we have pawn and her saving
+            if (coord_Mat[i][j] == 1 and
+               ((j-1>=0 and i-1>=0 and coord_Mat[i-1][j-1] == 1) or
+               (j-1>=0 and i+1<=7 and coord_Mat[i+1][j-1] == 1))):  
+                
+                #print('i=' ,i,'\t','j=', j,'\n')
+                safe_count +=1
+            j+=1
+        i+=1
+        
+        
+        
+    return safe_count
+    '''
+    
+#Get Tic-Tac-Toe result
+    #. - empty place  
+def TicTacToeRes(data):
+    if len(data) < 3:
+        return 'D'
+    
+    # two transpose, in first we check column, in second we get initial data
+    for c in range(2):    
+        for i in data: 
+            if i[0] == i[1] == i[2] == '.': #check dot row
+                continue
+            if i[0] == i[1] == i[2]:  #check row
+                return i[0]      
+        data = [list(x) for x in zip(*data)] #Transpose the matrix
+        
+    if (not data[0][0] == '.') and data[0][0] == data[1][1] == data[2][2]: #first diagonal              
+        return data[0][0]
+    
+    if (not data[0][2] == '.') and data[0][2] == data[1][1] == data[2][0]: #second diagonal        
+        return data[0][2]
+    
+    return 'D'
        
+        
+        
+    
+    
 def main():
     #print(MultTable())    
     #print(TimeConverter('12:30'))
@@ -223,8 +283,11 @@ def main():
     #print(FlattenList([100,99,98,97,-96,95,94,93,92,91,90,89,88,87,86,]))
     #print(AllTheSame([]))
     #print(SunAngle('18:01'))
-    print(BirdTranslater('hoooowe yyyooouuu duoooiiine'))
-    print(BirdTranslater('aaa bo cy da eee fe'))
+    #print(BirdTranslater('hoooowe yyyooouuu duoooiiine'))
+    #print(BirdTranslater('aaa bo cy da eee fe'))
+    #print(ChessSafePawn({"a1","b2","c3","d4","e5","f6","g7","h8"}))
+    print(TicTacToeRes([".O.","...","..."]))
+    
 
 
 main()    
