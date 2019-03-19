@@ -4,11 +4,15 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import mglearn
 
+
 from sklearn.datasets import load_iris
 
 from sklearn.model_selection import  train_test_split
 
+from sklearn.neighbors import KNeighborsClassifier
 
+    
+    
 def SpeedyNumPyCheck():
     normal_py_sec = timeit.timeit('sum(x*x for x in range(1000))',
                                   number = 10000)
@@ -50,10 +54,29 @@ def IrisClassification():
     grr = pd.scatter_matrix(iris_dataframe, c=y_train, figsize=(15,15),marker='o',
                             hist_kwds={'bins':20}, s=60,alpha=.8, cmap=mglearn.cm3)
     
-
+    print('\n\n')
+    #Knn prediction
+    knn = KNeighborsClassifier(n_neighbors = 1)
+    knn.fit(X_train, y_train)
+    
+    X_new = np.array([[5, 2.9, 1, 0.2]])    
+    prediction = knn.predict(X_new)
+    print("Прогноз: {}".format(prediction))
+    print("Prignazing mark: {}".format(iris_dataset['target_names'][prediction]))
+    
+    print('\n\n')
+    #Knn accuracy
+    y_pred = knn.predict(X_test)
+    print("Prediction for the test case:\n {}".format(y_pred))
+    print("Correctness on test case: {:.2f}".format(np.mean(y_pred == y_test)))
+    print("Alternative correctness calculating on test case: {:.2f}".format(
+            knn.score(X_test, y_test)))
+    
 def main():
     #SpeedyNumPyCheck()
     IrisClassification()
+    
+    
 
 if __name__ == '__main__':
     main()
