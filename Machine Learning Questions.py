@@ -6,8 +6,8 @@ import mglearn
 
 
 from sklearn.datasets import load_iris
-
-from sklearn.model_selection import  train_test_split
+from sklearn.datasets import load_breast_cancer
+from sklearn.model_selection import train_test_split
 
 from sklearn.neighbors import KNeighborsClassifier
 
@@ -71,13 +71,48 @@ def IrisClassification():
     print("Correctness on test case: {:.2f}".format(np.mean(y_pred == y_test)))
     print("Alternative correctness calculating on test case: {:.2f}".format(
             knn.score(X_test, y_test)))
+
+def CancerClassification():
+    cancer = load_breast_cancer()
+    print(f"Key Cancer(): \n {cancer.keys()}")
+    print(f"Data array form for Cancer case: {cancer.data.shape}")
+    print("Number of examples for each classes: {}".format({ n: v for n, v in zip(cancer.target_names, np.bincount(cancer.target))}))
+    print(f"Signs name: \n {cancer.feature_names}")
+    mglearn.plots.plot_knn_classification(n_neighbors=3)
+  
+def TrainTestSplit():
+    X, y = mglearn.datasets.make_forge()
+    
+    X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+    
+    clf = KNeighborsClassifier(n_neighbors=3)
+    clf.fit(X_train, y_train)
+    
+    print(f"Forecasts on the test case: {clf.predict(X_test)}")
+    print("Correctness on the test case: {:.2f}".format(clf.score(X_test, y_test)))
+
+def GenerateDataCase():
+    #generate data case
+    X,y = mglearn.datasets.make_forge()
+    mglearn.discrete_scatter(X[:,0], X[:,1], y)
+    plt.legend(["Class 0", "Class 1"], loc=4)
+    plt.xlabel("First mark")
+    plt.ylabel("Second mark")
+    print(f"Array form X: {X.shape}")
+    
+    X,y = mglearn.datasets.make_wave(n_samples=40)
+    plt.plot(X, y, 'o')
+    plt.ylim(-3, 3)
+    plt.xlabel("Mark")
+    plt.ylabel("Target Variable")
     
 def main():
     #SpeedyNumPyCheck()
-    IrisClassification()
+    #IrisClassification()
+    #CancerClassification()
+    TrainTestSplit()
     
     
-
 if __name__ == '__main__':
     main()
 
