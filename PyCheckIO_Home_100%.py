@@ -253,7 +253,7 @@ def ChessSafePawn(data):
     '''
     
 #Get Tic-Tac-Toe result
-    #. - empty place  
+#. - empty place  
 def TicTacToeRes(data):
     if len(data) < 3:
         return 'D'
