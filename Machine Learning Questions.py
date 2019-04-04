@@ -19,7 +19,8 @@ from sklearn.cluster import KMeans
 
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import cross_val_score
-    
+from sklearn.decomposition import TruncatedSVD
+import itertools    
     
 def SpeedyNumPyCheck():
     normal_py_sec = timeit.timeit('sum(x*x for x in range(1000))',
@@ -128,6 +129,17 @@ def GenerateDataCase():
  
 class NapoleonIT:
     
+    def validate_with_mappings(self, preds, target, dataset):
+        
+        permutations = itertools.permutations([0,1,2])
+        for a, b, c in permutations:
+            mapping = {2: a, 1: b, 0: c}
+            mapped_preds = [mapping[pred] for pred in preds]
+            print( float(sum(mapped_preds != target)) / len(target))
+          
+    
+    
+    
     def TextClasterization(self):
         #train_all = fetch_20newsgroups(subset='train')
         #print (train_all.target_names)
@@ -192,20 +204,43 @@ class NapoleonIT:
                             'comp.graphics'])
         #use K-means method
         matrix = vectorizer.fit_transform(dataset.data)
+        #model = KMeans(n_clusters=3, random_state=42)
+        #preds = model.fit_predict(matrix.toarray())
+        #print(preds)
+        #print(dataset.target)
+        
+        #we see how alghorithm quality was dropped
+        #mapping = {2: 0, 1: 1, 0: 2}
+        #mapped_preds = [mapping[pred] for pred in preds]
+        #accurance ~33%
+        #print( float(sum(mapped_preds != dataset.target)) / len(dataset.target))
+        
+        #for compression we can take another classifier
+        #clf = LogisticRegression()
+        #print (cross_val_score(clf, matrix, dataset.target).mean() )
+        
+        #SVD+ KMeans
+        """
         model = KMeans(n_clusters=3, random_state=42)
-        preds = model.fit_predict(matrix.toarray())
+        svd = TruncatedSVD(n_components=1000, random_state=123)
+        features = svd.fit_transform(matrix)
+        preds = model.fit_predict(features)
         print(preds)
         print(dataset.target)
         
-        #we see how alghorithm quality was dropped
-        mapping = {2: 0, 1: 1, 0: 2}
+        mapping = {0: 1, 1: 2, 2: 0}
         mapped_preds = [mapping[pred] for pred in preds]
-        #accurance ~33%
         print( float(sum(mapped_preds != dataset.target)) / len(dataset.target))
+        """
+        #Reduce the number of features
+        model = KMeans(n_clusters=3, random_state=42)
+        svd = TruncatedSVD(n_components=200, random_state=321)
+        features = svd.fit_transform(matrix)
+        preds = model.fit_predict(features)
+        print(preds)
+        print(dataset.target)
+        self.validate_with_mappings(preds, dataset.target, dataset)
         
-        #for compression we can take another classifier
-        clf = LogisticRegression()
-        print (cross_val_score(clf, matrix, dataset.target).mean() )
         
     
 def main():
@@ -215,6 +250,7 @@ def main():
     #TrainTestSplit()
     lection_2 = NapoleonIT()
     lection_2.TextClasterization()
+    
     
     
     
