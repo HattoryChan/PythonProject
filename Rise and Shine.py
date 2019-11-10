@@ -55,6 +55,17 @@ class RiseAndShine():
         img = cv2.imread(img_name
                          , cv2.IMREAD_UNCHANGED)
         
+        
+        #resizing image
+        resizing_arr = img[: 1, :, :] 
+        for i in range(40):        
+            img = cv2.vconcat([img, resizing_arr])
+            
+        resizing_arr = img[: ,: 1, :]    
+        for i in range(30):                
+            img = cv2.hconcat([img, resizing_arr])
+        
+        
         # The number of pixels shift
         num_rows, num_cols = img.shape[:2]
         
@@ -200,16 +211,17 @@ class RiseAndShine():
 
 
 
+    
+    
+
 if __name__ == "__main__":
     a = RiseAndShine()
-    cv2.imwrite('NormalShadow.png', a.ShadowBlur('Your_PNG_Path',
-                                   **a.NormalShadow()))
+    #cv2.imwrite('NormalShadow.png', a.ShadowBlur('Your_PNG_Path',
+    #                               **a.NormalShadow()))  
     
-    
-    '''
     #To create shadows for all images in a folder
     path = 'D:\\ChromeDownload\\donors_364_items\\removebg\\'
-    path_save = 'D:\\ChromeDownload\\donors_364_items\\removebg_new\\'
+    path_save = 'D:\\ChromeDownload\\donors_364_items\\removebg_Normal_shadow\\'
     
     print("Check directory exist: " + str(os.path.exists(path)))
     
@@ -217,4 +229,4 @@ if __name__ == "__main__":
     
     for name in tqdm(image_in_path):
             a.ShadowBlur(name, **a.NormalShadow()).save(path_save + name.split('\\')[-1], "PNG")        
-    '''        
+          
