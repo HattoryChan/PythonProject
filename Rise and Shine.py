@@ -9,6 +9,7 @@ from PIL import Image
 import glob
 import os
 from tqdm import tqdm
+#from skimage import transform,io
 
 
 class RiseAndShine():
@@ -48,8 +49,7 @@ class RiseAndShine():
         img_power = 1.0):  
         """
                    
-                   
-        
+                
         
         #Open
         img = cv2.imread(img_name
@@ -57,6 +57,8 @@ class RiseAndShine():
         
         # The number of pixels shift
         num_rows, num_cols = img.shape[:2]
+        
+        #expand picture
         
         #move the mask
         mask_translation = cv2.warpAffine(img[:,:,-1], translation_matrix, (num_cols,num_rows))
@@ -202,6 +204,8 @@ if __name__ == "__main__":
     a = RiseAndShine()
     cv2.imwrite('NormalShadow.png', a.ShadowBlur('Your_PNG_Path',
                                    **a.NormalShadow()))
+    
+    
     '''
     #To create shadows for all images in a folder
     path = 'D:\\ChromeDownload\\donors_364_items\\removebg\\'
