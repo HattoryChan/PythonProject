@@ -5,6 +5,10 @@
 
 import cv2 
 import numpy as np
+from PIL import Image
+import glob
+import os
+from tqdm import tqdm
 
 
 class RiseAndShine():
@@ -46,21 +50,16 @@ class RiseAndShine():
                    
                    
         
+        
         #Open
         img = cv2.imread(img_name
                          , cv2.IMREAD_UNCHANGED)
         
-        
-        #HSV color and cheate mask for non white object
-        hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-        mask = cv2.inRange(hsv, hsv_min, hsv_max)
-        #inverse the mask
-        mask = 255 - mask
-        # The number of pixels
+        # The number of pixels shift
         num_rows, num_cols = img.shape[:2]
         
         #move the mask
-        mask_translation = cv2.warpAffine(mask, translation_matrix, (num_cols,num_rows))
+        mask_translation = cv2.warpAffine(img[:,:,-1], translation_matrix, (num_cols,num_rows))
         #repaint
         mask_translation = np.where(mask_translation==255, 125, mask_translation)
         
@@ -70,34 +69,50 @@ class RiseAndShine():
         if blurred == 1:
             img = cv2.GaussianBlur(img, gauss_img_ksize, 0)
         
-        #Cut out by mask
-        for i in range(img.shape[2]):    
-            img[:,:,i] = cv2.bitwise_and(img[:,:,i], mask)
-        
-        
-        #Copy to finish image
+                
         out = img.copy()
         
+        #Crete shadow mask
+        shadow_mask = cv2.bitwise_or(img[:,:,-1], mask_translation)  
+        shadow_mask_inv = shadow_mask
+        shadow_mask = 255 - shadow_mask
+        shadow_mask = cv2.bitwise_or(img[:,:,-1], shadow_mask)
         
         #Concatinate shadow and image
-        if shadow == 1:
-            out[:,:,3] = cv2.addWeighted(mask_translation, shadow_power, 
-                                   img[:,:,3], img_power ,0. )
+        for i in range(out.shape[2]): 
+            out[:,:,i] = cv2.bitwise_and(out[:,:,i], shadow_mask)
+            
+        #For background layer    
+        out[:,:,3] = cv2.bitwise_or(img[:,:,-1], shadow_mask_inv)
+        #RGB to BGR
+        out[...,[0,2]]=out[...,[2,0]]
         
-        
-        return out
-    
+        #Convert to PIL
+        out_pil = Image.fromarray(out)
+        #out_pil.save("out.png","PNG")
+        #out_pil.show()
+        '''
         #Debugg part
-        #print(img.shape)
+        #print(hsv.shape[2])
+        #print(out.shape[2])
         #print(img[:,:,0].shape)
         
         #Save it
         #cv2.imwrite('out.png', out)
-        
+
         #Im show
-        #cv2.imshow('out', out)
-        #cv2.imshow('3', hsv[:, : ,2])
-        #cv2.resizeWindow('result',600,600)
+        cv2.imshow('out', out)
+        #cv2.imshow('mask_translation', mask_translation)
+        #cv2.imshow('shadow_mask', shadow_mask)
+        cv2.imshow('mask', mask)
+       
+        for i in range(out.shape[2]):            
+            cv2.imshow(str(i),out[:,:,i])      
+        '''  
+        #cv2.resizeWindow('result',600,600)        
+        return out_pil
+        
+        
         
     
     def NormalShadow(self):
@@ -185,6 +200,17 @@ class RiseAndShine():
 
 if __name__ == "__main__":
     a = RiseAndShine()
-    cv2.imwrite('NormalShadow.png', a.ShadowBlur('kisspng-paper-notebook-notebook-5a7b16d269e617.3736536315180162104338.png',
+    cv2.imwrite('NormalShadow.png', a.ShadowBlur('Your_PNG_Path',
                                    **a.NormalShadow()))
-   # print(a.NormalShadow('kisspng-paper-notebook-notebook-5a7b16d269e617.3736536315180162104338.png'))
+    '''
+    #To create shadows for all images in a folder
+    path = 'D:\\ChromeDownload\\donors_364_items\\removebg\\'
+    path_save = 'D:\\ChromeDownload\\donors_364_items\\removebg_new\\'
+    
+    print("Check directory exist: " + str(os.path.exists(path)))
+    
+    image_in_path = glob.glob(path+'*.png')
+    
+    for name in tqdm(image_in_path):
+            a.ShadowBlur(name, **a.NormalShadow()).save(path_save + name.split('\\')[-1], "PNG")        
+    '''        
